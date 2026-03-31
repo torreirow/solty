@@ -47,6 +47,11 @@ The tool will:
 - Supports ISO8601 and HH:MM formats
 - Default: current time (when --time is not provided)
 
+**API Integration Details:**
+- Billable field: Required by API, defaults to `false` for all entries
+- Timezone handling: Send UTC to API, display local timezone to users
+- Time format: ISO8601/RFC3339 format for API communication
+
 ## Non-Goals (v1)
 
 - No tags support (tags must be pre-created in Solidtime; API requires tag IDs)

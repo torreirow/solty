@@ -109,9 +109,25 @@
 
 ## 15. Start Command Enhancement
 
-- [x] 15.1 Add --time flag to start command
+- [x] 15.1 Add --time flag to start command (renamed from --start)
 - [x] 15.2 Create shared parseTime utility function
 - [x] 15.3 Update StartTimeEntry to accept custom start time
 - [x] 15.4 Handle both ISO8601 and HH:MM formats
 - [x] 15.5 Display custom start time in confirmation message
 - [x] 15.6 Update documentation with custom start time examples
+
+## 16. API Integration Fixes
+
+- [x] 16.1 Add billable field to StartTimeEntry (default false)
+- [x] 16.2 Add billable field to CreateTimeEntry (default false)
+- [x] 16.3 Convert times to UTC in StartTimeEntry
+- [x] 16.4 Convert times to UTC in StopTimeEntry
+- [x] 16.5 Convert times to UTC in CreateTimeEntry
+
+## 17. Timezone Display
+
+- [x] 17.1 Convert displayed times to local timezone in start command
+- [x] 17.2 Convert displayed times to local timezone in current command
+- [x] 17.3 Convert displayed times to local timezone in add command
+- [x] 17.4 Convert displayed times to local timezone in list command
+- [x] 17.5 Update documentation to reflect timezone handling

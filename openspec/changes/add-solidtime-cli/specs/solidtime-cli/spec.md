@@ -248,3 +248,28 @@ The CLI tool SHALL provide clear, actionable error messages.
 - **THEN** the CLI SHALL display what was invalid
 - **AND** show the expected format
 - **AND** exit with code 1
+
+### Requirement: Timezone Handling
+
+The CLI tool SHALL handle timezone conversions between user's local time and API UTC requirements.
+
+#### Scenario: Send times to API in UTC
+- **WHEN** the CLI creates or updates a time entry
+- **THEN** it SHALL convert all timestamps to UTC before sending to API
+- **AND** format times as ISO8601/RFC3339
+- **AND** include billable field (default: false)
+
+#### Scenario: Display times in local timezone
+- **WHEN** the CLI displays time information to the user
+- **THEN** it SHALL convert UTC times from API to user's local timezone
+- **AND** format times in user-friendly format (HH:MM or YYYY-MM-DD HH:MM)
+
+#### Scenario: User inputs local time
+- **WHEN** user provides time in HH:MM format (e.g., "14:00")
+- **THEN** the CLI SHALL interpret it as local timezone
+- **AND** convert to UTC for API submission
+
+#### Scenario: User inputs ISO8601 time
+- **WHEN** user provides time in ISO8601 format with timezone
+- **THEN** the CLI SHALL preserve the timezone information
+- **AND** convert to UTC for API submission

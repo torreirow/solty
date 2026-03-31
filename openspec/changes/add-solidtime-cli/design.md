@@ -283,6 +283,44 @@ type Config struct {
 
 **Pattern:** `solidtime-cli start "Task" --time "09:00"`
 
+### Billable Field Required
+
+**Decision:** Include billable field in all time entry creation requests
+
+**Rationale:**
+- Solidtime API requires the billable field (validation error without it)
+- Default to false for all entries created via CLI
+- Users can modify billable status in web interface if needed
+- Simplifies CLI usage (no need for --billable flag in v1)
+
+**Implementation:**
+- Add `"billable": false` to all POST requests (start, add commands)
+
+### Timezone Handling
+
+**Decision:** Send UTC to API, display local timezone to users
+
+**Rationale:**
+- API validates time format strictly and expects UTC
+- Users expect to see times in their local timezone
+- Go's time.Time handles timezone conversion natively
+- Prevents confusion when times displayed don't match user's clock
+
+**Implementation:**
+- Convert all times to UTC before sending: `time.UTC()`
+- Convert all times from API to local for display: `time.Local()`
+- Applied to: start command, stop command, add command, current command, list command
+
+**Pattern:**
+```go
+// Sending to API
+startTime := time.Now().UTC()
+payload["start"] = startTime.Format(time.RFC3339)
+
+// Displaying to user
+fmt.Printf("Started: %s\n", entry.Start.Local().Format("15:04"))
+```
+
 ## Open Questions
 
 None - all clarifications received from user:

@@ -33,9 +33,9 @@ func (c *Client) StartTimeEntry(description string, projectID *string, customSta
 		return nil, fmt.Errorf("failed to get member ID: %w", err)
 	}
 
-	startTime := time.Now()
+	startTime := time.Now().UTC()
 	if customStart != nil {
-		startTime = *customStart
+		startTime = customStart.UTC()
 	}
 
 	payload := map[string]interface{}{
@@ -43,6 +43,7 @@ func (c *Client) StartTimeEntry(description string, projectID *string, customSta
 		"member_id":       memberID,
 		"organization_id": c.workspaceID,
 		"start":           startTime.Format(time.RFC3339),
+		"billable":        false,
 	}
 
 	if projectID != nil {
@@ -120,8 +121,9 @@ func (c *Client) CreateTimeEntry(description string, start, end time.Time, proje
 		"description":     description,
 		"member_id":       memberID,
 		"organization_id": c.workspaceID,
-		"start":           start.Format(time.RFC3339),
-		"end":             end.Format(time.RFC3339),
+		"start":           start.UTC().Format(time.RFC3339),
+		"end":             end.UTC().Format(time.RFC3339),
+		"billable":        false,
 	}
 
 	if projectID != nil {

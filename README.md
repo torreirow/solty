@@ -2,6 +2,8 @@
 
 Command-line interface for Solidtime time tracking.
 
+<img src="./images/solty-logo.png">
+
 ## Features
 
 - **Start/Stop timers** - Quick time tracking from the terminal

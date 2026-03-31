@@ -83,9 +83,9 @@ func runStart(cmd *cobra.Command, args []string) {
 
 	fmt.Printf("✓ Timer started: \"%s\"\n", entry.Description)
 	if customStart != nil {
-		fmt.Printf("  Start time: %s (custom)\n", entry.Start.Format("15:04"))
+		fmt.Printf("  Start time: %s (custom)\n", entry.Start.Local().Format("15:04"))
 	} else {
-		fmt.Printf("  Start time: %s\n", entry.Start.Format("15:04"))
+		fmt.Printf("  Start time: %s\n", entry.Start.Local().Format("15:04"))
 	}
 	if startProject != "" {
 		fmt.Printf("  Project: %s\n", startProject)

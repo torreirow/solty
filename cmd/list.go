@@ -58,8 +58,9 @@ func runList(cmd *cobra.Command, args []string) {
 
 	// Print entries
 	for _, entry := range entries {
-		date := entry.Start.Format("2006-01-02")
-		startTime := entry.Start.Format("15:04")
+		localStart := entry.Start.Local()
+		date := localStart.Format("2006-01-02")
+		startTime := localStart.Format("15:04")
 		duration := formatDuration(entry.Duration)
 
 		if listShowID {

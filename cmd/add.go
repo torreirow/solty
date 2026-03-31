@@ -81,8 +81,8 @@ func runAdd(cmd *cobra.Command, args []string) {
 
 	duration := formatDuration(entry.Duration)
 	fmt.Printf("✓ Time entry added: \"%s\"\n", entry.Description)
-	fmt.Printf("  Start: %s\n", entry.Start.Format("15:04"))
-	fmt.Printf("  End: %s\n", entry.End.Format("15:04"))
+	fmt.Printf("  Start: %s\n", entry.Start.Local().Format("15:04"))
+	fmt.Printf("  End: %s\n", entry.End.Local().Format("15:04"))
 	fmt.Printf("  Duration: %s\n", duration)
 	if addProject != "" {
 		fmt.Printf("  Project: %s\n", addProject)

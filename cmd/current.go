@@ -37,7 +37,7 @@ func runCurrent(cmd *cobra.Command, args []string) {
 
 	elapsed := formatElapsedTime(current.Start)
 	fmt.Printf("Timer running: \"%s\"\n", current.Description)
-	fmt.Printf("  Started: %s\n", current.Start.Format("15:04"))
+	fmt.Printf("  Started: %s\n", current.Start.Local().Format("15:04"))
 	fmt.Printf("  Elapsed: %s\n", elapsed)
 	if current.ProjectID != nil {
 		fmt.Printf("  Project ID: %s\n", *current.ProjectID)

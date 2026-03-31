@@ -1,4 +1,34 @@
 #!/usr/bin/env bash
+#
+# Release Preparation Script for Soltty
+#
+# This script prepares a new release by:
+# 1. Checking for uncommitted changes
+# 2. Optionally archiving completed OpenSpec changes
+# 3. Updating VERSION and CHANGELOG.md
+# 4. Verifying the build with the new version (local test)
+# 5. Creating a git commit and tag
+# 6. Optionally pushing to remote
+#
+# IMPORTANT: Binary builds are automated via GoReleaser + GitHub Actions
+# -------------------------------------------------------------------
+# When you push the tag created by this script, GitHub Actions will
+# automatically trigger GoReleaser, which will:
+#   - Build binaries for all platforms (Linux, macOS, Windows - amd64/arm64)
+#   - Create release archives (tar.gz for Unix, zip for Windows)
+#   - Generate checksums
+#   - Create a GitHub Release with all artifacts
+#
+# The local build in this script (step 4) is only for verification.
+# The official release binaries are built by GoReleaser in the cloud.
+#
+# Workflow:
+#   ./release.sh  →  Creates tag  →  git push origin v*.*.*
+#                                        ↓
+#                                  GitHub Actions + GoReleaser
+#                                        ↓
+#                                  Multi-platform binaries published
+#
 
 set -e
 
@@ -241,8 +271,12 @@ else
 fi
 
 # Verify Go build with version
+# NOTE: This is a local verification build only.
+# The official multi-platform binaries will be built by GoReleaser
+# on GitHub Actions when you push the tag.
 if [[ -f go.mod ]] && command -v go &> /dev/null; then
     print_info "Verifying Go build with version ${NEW_VERSION}..."
+    print_info "(Official binaries will be built by GoReleaser after tag push)"
 
     # Build with version ldflags
     if go build -ldflags "-X github.com/torreirow/soltty/cmd.version=${NEW_VERSION}" -o soltty.test 2>&1; then
@@ -387,5 +421,20 @@ git push origin "v${NEW_VERSION}"
 
 echo ""
 print_success "Release v${NEW_VERSION} pushed to remote!"
+echo ""
+print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+print_info "  GitHub Actions will now automatically:"
+echo "    • Build binaries for all platforms (Linux, macOS, Windows)"
+echo "    • Create release archives (tar.gz, zip)"
+echo "    • Generate checksums"
+echo "    • Publish GitHub Release with all artifacts"
+echo ""
+print_info "  Monitor the build:"
+echo "    https://github.com/torreirow/soltty/actions"
+echo ""
+print_info "  View the release (when complete):"
+echo "    https://github.com/torreirow/soltty/releases/tag/v${NEW_VERSION}"
+print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 print_success "Done! 🚀"
 echo ""

@@ -66,7 +66,7 @@ func (c *Client) StartTimeEntry(description string, projectID *string, customSta
 
 // StopTimeEntry stops a running time entry
 func (c *Client) StopTimeEntry(entryID string) (*TimeEntry, error) {
-	now := time.Now()
+	now := time.Now().UTC()
 	payload := map[string]interface{}{
 		"end": now.Format(time.RFC3339),
 	}

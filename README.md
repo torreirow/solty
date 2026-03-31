@@ -229,10 +229,88 @@ solty delete <entry-id>
 
 ## Development
 
-Built with:
-- Go 1.21+
-- Cobra CLI framework
-- Solidtime API (JSON:API format)
+### Tech Stack
+
+- **Language**: Go 1.21+
+- **CLI Framework**: Cobra
+- **API**: Solidtime JSON:API
+- **Build**: Nix flakes
+- **Documentation**: OpenSpec
+
+### Development Workflow
+
+This project uses [OpenSpec](https://openspec.dev) for specification-driven development:
+
+```bash
+# View all specifications
+openspec list
+
+# View specific capability spec
+openspec show solidtime-cli --type spec
+
+# Create new feature proposal
+openspec proposal "Add new feature"
+
+# Apply approved changes
+openspec apply <change-id>
+
+# Archive completed changes
+openspec archive <change-id>
+```
+
+**Documentation structure:**
+- `openspec/specs/` - Current capability specifications
+- `openspec/changes/` - Active change proposals
+- `openspec/changes/archive/` - Completed and archived changes
+
+### Building from Source
+
+```bash
+# Clone repository
+git clone https://github.com/torreirow/solty.git
+cd solty
+
+# Build with version
+VERSION=$(cat VERSION)
+go build -ldflags "-X github.com/torreirow/solty/cmd.version=${VERSION}" -o solty
+
+# Or use Nix
+nix build
+```
+
+### Making Changes
+
+1. **Create proposal**: Use OpenSpec to document the change
+2. **Update specs**: Modify or create specifications in `openspec/changes/`
+3. **Implement**: Write code following the spec
+4. **Test**: Verify all scenarios from the spec
+5. **Update docs**: Keep README and CHANGELOG in sync
+6. **Mark complete**: Mark the change as complete in OpenSpec
+
+### Releasing
+
+Use the automated release script:
+
+```bash
+./release.sh
+```
+
+This will:
+1. Check for uncommitted changes
+2. Optionally archive completed OpenSpec changes
+3. Update VERSION and CHANGELOG.md
+4. Build and test with new version
+5. Create git commit and tag
+6. Optionally push to remote
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Check existing OpenSpec proposals for planned features
+2. Create a new proposal for significant changes
+3. Follow the OpenSpec workflow
+4. Ensure tests pass and version embeds correctly
+5. Update documentation
 
 ## License
 

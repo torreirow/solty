@@ -128,7 +128,7 @@ solty version
 solty add "Meeting" --start "14:00" --end "15:30"
 
 # With project
-solty add "Sprint planning" --start "10:00" --end "12:00" --project "TN-Meetings"
+solty add "Sprint planning" --start "10:00" --end "12:00" --project "Meetings"
 
 # Full ISO8601 timestamps
 solty add "Client call" --start "2026-03-31T14:00:00Z" --end "2026-03-31T15:30:00Z"
@@ -191,7 +191,7 @@ Use project names (not IDs) with the `--project` flag. Solty will:
 
 ```bash
 # Morning: Start working
-solty start "Daily standup" --project "TN-General"
+solty start "Daily standup" --project "General"
 solty stop
 
 solty start "Feature development" --project "Customer-Project"

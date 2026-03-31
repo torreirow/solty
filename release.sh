@@ -245,11 +245,11 @@ if [[ -f go.mod ]] && command -v go &> /dev/null; then
     print_info "Verifying Go build with version ${NEW_VERSION}..."
 
     # Build with version ldflags
-    if go build -ldflags "-X github.com/torreirow/solty/cmd.version=${NEW_VERSION}" -o solty.test 2>&1; then
+    if go build -ldflags "-X github.com/torreirow/soltty/cmd.version=${NEW_VERSION}" -o soltty.test 2>&1; then
         print_success "Go build succeeded"
 
         # Test version output
-        VERSION_OUTPUT=$(./solty.test --version 2>&1 || echo "")
+        VERSION_OUTPUT=$(./soltty.test --version 2>&1 || echo "")
         if echo "$VERSION_OUTPUT" | grep -q "${NEW_VERSION}"; then
             print_success "Version ${NEW_VERSION} embedded correctly"
         else
@@ -257,7 +257,7 @@ if [[ -f go.mod ]] && command -v go &> /dev/null; then
         fi
 
         # Clean up test binary
-        rm -f solty.test
+        rm -f soltty.test
     else
         print_error "Go build failed!"
         print_error "Fix build errors before releasing"

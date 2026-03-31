@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/torreirow/solty/cmd"
+	"github.com/torreirow/soltty/cmd"
 )
 
 func main() {

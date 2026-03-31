@@ -1,5 +1,5 @@
 {
-  description = "Solty - Solidtime CLI time tracking tool";
+  description = "Soltty - Solidtime CLI time tracking tool";
 
   inputs.nixpkgs.url = "nixpkgs/nixos-24.05";
 
@@ -16,8 +16,8 @@
           version = builtins.readFile ./VERSION;
         in
         {
-          solty = pkgs.buildGoModule {
-            pname = "solty";
+          soltty = pkgs.buildGoModule {
+            pname = "soltty";
             version = pkgs.lib.strings.trim version;
             src = ./.;
 
@@ -26,19 +26,19 @@
             ldflags = [
               "-s"
               "-w"
-              "-X github.com/torreirow/solty/cmd.version=${pkgs.lib.strings.trim version}"
+              "-X github.com/torreirow/soltty/cmd.version=${pkgs.lib.strings.trim version}"
             ];
 
             meta = with pkgs.lib; {
               description = "Command-line time tracking tool for Solidtime";
-              homepage = "https://github.com/torreirow/solty";
+              homepage = "https://github.com/torreirow/soltty";
               license = licenses.mit;
               maintainers = [ ];
             };
           };
         });
 
-      defaultPackage = forAllSystems (system: self.packages.${system}.solty);
+      defaultPackage = forAllSystems (system: self.packages.${system}.soltty);
 
       devShells = forAllSystems (system:
         let
@@ -54,11 +54,11 @@
             ];
 
             shellHook = ''
-              echo "Solty development environment"
+              echo "Soltty development environment"
               echo "Go version: $(go version)"
               echo ""
               echo "Available commands:"
-              echo "  go build -o solty     - Build the binary"
+              echo "  go build -o soltty    - Build the binary"
               echo "  go test ./...         - Run tests"
               echo "  go run main.go        - Run without building"
             '';

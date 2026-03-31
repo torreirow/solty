@@ -1,4 +1,4 @@
-module github.com/torreirow/solty
+module github.com/torreirow/soltty
 
 go 1.21
 

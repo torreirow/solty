@@ -4,23 +4,23 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/torreirow/solty/internal/client"
-	"github.com/torreirow/solty/internal/config"
+	"github.com/torreirow/soltty/internal/client"
+	"github.com/torreirow/soltty/internal/config"
 )
 
 // version is set via ldflags during build
 var version = "dev"
 
 var rootCmd = &cobra.Command{
-	Use:   "solty",
+	Use:   "soltty",
 	Short: "Solidtime CLI - Command-line time tracking",
-	Long: `Solty is a command-line interface for Solidtime time tracking.
+	Long: `Soltty is a command-line interface for Solidtime time tracking.
 
 Track time directly from your terminal with commands like:
-  solty start "Working on feature"
-  solty stop
-  solty current
-  solty list
+  soltty start "Working on feature"
+  soltty stop
+  soltty current
+  soltty list
 
 Configuration is read from ~/.config/solidtime/config.json`,
 	Version: version,

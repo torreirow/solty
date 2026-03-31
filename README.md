@@ -1,4 +1,4 @@
-# Solty - Solidtime CLI
+# Soltty - Solidtime CLI
 
 Command-line interface for Solidtime time tracking.
 
@@ -20,22 +20,22 @@ Command-line interface for Solidtime time tracking.
 
 ```bash
 # Run directly without installing
-nix run github:torreirow/solty -- start "My task"
+nix run github:torreirow/soltty -- start "My task"
 
 # Install to user profile
-nix profile install github:torreirow/solty
+nix profile install github:torreirow/soltty
 
 # Or add to your NixOS/home-manager configuration:
 # flake.nix
 {
-  inputs.solty.url = "github:torreirow/solty";
+  inputs.soltty.url = "github:torreirow/soltty";
   # ...
-  outputs = { self, nixpkgs, solty, ... }: {
+  outputs = { self, nixpkgs, soltty, ... }: {
     # NixOS configuration
     nixosConfigurations.hostname = nixpkgs.lib.nixosSystem {
       modules = [
         {
-          environment.systemPackages = [ solty.packages.x86_64-linux.solty ];
+          environment.systemPackages = [ soltty.packages.x86_64-linux.soltty ];
         }
       ];
     };
@@ -44,7 +44,7 @@ nix profile install github:torreirow/solty
     homeConfigurations.username = home-manager.lib.homeManagerConfiguration {
       modules = [
         {
-          home.packages = [ solty.packages.x86_64-linux.solty ];
+          home.packages = [ soltty.packages.x86_64-linux.soltty ];
         }
       ];
     };
@@ -56,12 +56,12 @@ nix profile install github:torreirow/solty
 
 ```bash
 # Clone the repository
-git clone https://github.com/torreirow/solty.git
-cd solty
+git clone https://github.com/torreirow/soltty.git
+cd soltty
 
 # Build with version
 VERSION=$(cat VERSION)
-go build -ldflags "-X github.com/torreirow/solty/cmd.version=${VERSION}" -o solty
+go build -ldflags "-X github.com/torreirow/soltty/cmd.version=${VERSION}" -o soltty
 
 # Optional: Install to PATH
 go install
@@ -69,7 +69,7 @@ go install
 
 ### Option 3: Pre-built Binaries
 
-Download from [GitHub Releases](https://github.com/torreirow/solty/releases)
+Download from [GitHub Releases](https://github.com/torreirow/soltty/releases)
 
 ## Configuration
 
@@ -93,75 +93,75 @@ Create `~/.config/solidtime/config.json`:
 
 ```bash
 # Simple start
-solty start "Working on feature X"
+soltty start "Working on feature X"
 
 # With project
-solty start "Bug fix" --project "Customer-Project"
+soltty start "Bug fix" --project "Customer-Project"
 
 # With custom start time (if you forgot to start)
-solty start "Morning work" --time "09:00"
-solty start "Task" --time "2026-03-31T08:00:00Z"
+soltty start "Morning work" --time "09:00"
+soltty start "Task" --time "2026-03-31T08:00:00Z"
 ```
 
 ### Stop the timer
 
 ```bash
-solty stop
+soltty stop
 ```
 
 ### Show current timer
 
 ```bash
-solty current
+soltty current
 ```
 
 ### Check version
 
 ```bash
-solty --version
+soltty --version
 # or
-solty version
+soltty version
 ```
 
 ### Add completed entry
 
 ```bash
 # Add entry with specific times
-solty add "Meeting" --start "14:00" --end "15:30"
+soltty add "Meeting" --start "14:00" --end "15:30"
 
 # With project
-solty add "Sprint planning" --start "10:00" --end "12:00" --project "Meetings"
+soltty add "Sprint planning" --start "10:00" --end "12:00" --project "Meetings"
 
 # Full ISO8601 timestamps
-solty add "Client call" --start "2026-03-31T14:00:00Z" --end "2026-03-31T15:30:00Z"
+soltty add "Client call" --start "2026-03-31T14:00:00Z" --end "2026-03-31T15:30:00Z"
 ```
 
 ### List recent entries
 
 ```bash
 # Show last 10 entries
-solty list
+soltty list
 
 # Show last 5 entries
-solty list --limit 5
+soltty list --limit 5
 
 # Show with IDs (for deletion)
-solty list --id
+soltty list --id
 ```
 
 ### Delete entry
 
 ```bash
 # Get entry ID first
-solty list --id
+soltty list --id
 
 # Delete by ID
-solty delete 01234567-89ab-cdef-0123-456789abcdef
+soltty delete 01234567-89ab-cdef-0123-456789abcdef
 ```
 
 ## Configuration Locations
 
-Solty searches for `config.json` in this order:
+soltty searches for `config.json` in this order:
 
 1. `~/.config/solidtime/config.json` (recommended)
 2. `~/.solidtime/config.json`
@@ -169,14 +169,14 @@ Solty searches for `config.json` in this order:
 
 ## Time Formats
 
-Solty supports two time formats:
+soltty supports two time formats:
 
 - **ISO8601**: `2026-03-31T14:00:00Z` (full timestamp)
 - **Time only**: `14:00` (assumes today in local timezone)
 
 ## Project Names
 
-Use project names (not IDs) with the `--project` flag. Solty will:
+Use project names (not IDs) with the `--project` flag. soltty will:
 - Look up the project ID automatically
 - Match names case-insensitively
 - Suggest available projects if not found
@@ -193,40 +193,40 @@ Use project names (not IDs) with the `--project` flag. Solty will:
 
 ```bash
 # Morning: Start working
-solty start "Daily standup" --project "General"
-solty stop
+soltty start "Daily standup" --project "General"
+soltty stop
 
-solty start "Feature development" --project "Customer-Project"
+soltty start "Feature development" --project "Customer-Project"
 # ... work for a few hours ...
-solty stop
+soltty stop
 
 # Check what you tracked today
-solty list
+soltty list
 ```
 
 **Forgot to start timer:**
 
 ```bash
 # Oops, been working since 9am
-solty start "Morning coding" --time "09:00" --project "Customer-Project"
-solty stop
+soltty start "Morning coding" --time "09:00" --project "Customer-Project"
+soltty stop
 ```
 
 **Add past entry:**
 
 ```bash
 # Add yesterday's meeting you forgot to track
-solty add "Client meeting" --start "2026-03-30T14:00:00Z" --end "2026-03-30T15:30:00Z" --project "Customer-Project"
+soltty add "Client meeting" --start "2026-03-30T14:00:00Z" --end "2026-03-30T15:30:00Z" --project "Customer-Project"
 ```
 
 **Fix mistakes:**
 
 ```bash
 # List with IDs
-solty list --id
+soltty list --id
 
 # Delete wrong entry
-solty delete <entry-id>
+soltty delete <entry-id>
 ```
 
 ## Development
@@ -269,12 +269,12 @@ openspec archive <change-id>
 
 ```bash
 # Clone repository
-git clone https://github.com/torreirow/solty.git
-cd solty
+git clone https://github.com/torreirow/soltty.git
+cd soltty
 
 # Build with version
 VERSION=$(cat VERSION)
-go build -ldflags "-X github.com/torreirow/solty/cmd.version=${VERSION}" -o solty
+go build -ldflags "-X github.com/torreirow/soltty/cmd.version=${VERSION}" -o soltty
 
 # Or use Nix
 nix build
@@ -291,19 +291,27 @@ nix build
 
 ### Releasing
 
-Use the automated release script:
+Releases are automated via GitHub Actions and GoReleaser. To create a new release:
 
-```bash
-./release.sh
-```
+1. **Update version and changelog** (optional - use `release.sh` for this):
+   ```bash
+   ./release.sh
+   ```
+   This will update VERSION and CHANGELOG.md, create a commit and tag.
 
-This will:
-1. Check for uncommitted changes
-2. Optionally archive completed OpenSpec changes
-3. Update VERSION and CHANGELOG.md
-4. Build and test with new version
-5. Create git commit and tag
-6. Optionally push to remote
+2. **Push the tag** to trigger the release:
+   ```bash
+   git push origin v<version>
+   ```
+   Example: `git push origin v0.3.0`
+
+3. **Automated build**: GitHub Actions will automatically:
+   - Build binaries for Linux, macOS, and Windows (amd64 and arm64)
+   - Create archives (tar.gz for Unix, zip for Windows)
+   - Generate checksums
+   - Create a GitHub release with all artifacts attached
+
+The `release.sh` script is still useful for version management and changelog updates, but the binary building and GitHub release creation are now fully automated.
 
 ## Contributing
 

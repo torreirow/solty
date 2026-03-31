@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	startProject   string
-	startStartTime string
+	startProject string
+	startTime    string
 )
 
 var startCmd = &cobra.Command{
@@ -20,15 +20,15 @@ var startCmd = &cobra.Command{
 Examples:
   solty start "Working on feature X"
   solty start "Bug fix" --project "PSB-Project"
-  solty start "Forgot to start" --start "09:00"
-  solty start "Task" --start "2026-03-31T08:00:00Z"`,
+  solty start "Forgot to start" --time "09:00"
+  solty start "Task" --time "2026-03-31T08:00:00Z"`,
 	Args: cobra.ExactArgs(1),
 	Run:  runStart,
 }
 
 func init() {
 	startCmd.Flags().StringVarP(&startProject, "project", "p", "", "Project name")
-	startCmd.Flags().StringVarP(&startStartTime, "start", "s", "", "Custom start time (ISO8601 or HH:MM)")
+	startCmd.Flags().StringVarP(&startTime, "time", "t", "", "Custom start time (ISO8601 or HH:MM)")
 }
 
 func runStart(cmd *cobra.Command, args []string) {
@@ -65,8 +65,8 @@ func runStart(cmd *cobra.Command, args []string) {
 
 	// Parse custom start time if specified
 	var customStart *time.Time
-	if startStartTime != "" {
-		t, err := parseTime(startStartTime)
+	if startTime != "" {
+		t, err := parseTime(startTime)
 		if err != nil {
 			fmt.Println(formatError(err))
 			return

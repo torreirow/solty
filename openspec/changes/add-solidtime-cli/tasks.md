@@ -109,7 +109,7 @@
 
 ## 15. Start Command Enhancement
 
-- [x] 15.1 Add --start flag to start command
+- [x] 15.1 Add --time flag to start command
 - [x] 15.2 Create shared parseTime utility function
 - [x] 15.3 Update StartTimeEntry to accept custom start time
 - [x] 15.4 Handle both ISO8601 and HH:MM formats

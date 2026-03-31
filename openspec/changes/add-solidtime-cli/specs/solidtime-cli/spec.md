@@ -47,13 +47,13 @@ The CLI tool SHALL provide a `start` command to begin tracking time.
 - **AND** display confirmation with project name
 
 #### Scenario: Start with custom start time
-- **WHEN** user runs `solidtime-cli start "Forgot to start" --start "09:00"`
+- **WHEN** user runs `solidtime-cli start "Forgot to start" --time "09:00"`
 - **THEN** the CLI SHALL parse the time as today at 09:00
 - **AND** create a time entry with start time set to 09:00
 - **AND** display confirmation showing custom start time
 
 #### Scenario: Start with ISO8601 start time
-- **WHEN** user runs `solidtime-cli start "Task" --start "2026-03-31T08:00:00Z"`
+- **WHEN** user runs `solidtime-cli start "Task" --time "2026-03-31T08:00:00Z"`
 - **THEN** the CLI SHALL parse the full ISO8601 timestamp
 - **AND** create a time entry with the specified start time
 - **AND** display confirmation

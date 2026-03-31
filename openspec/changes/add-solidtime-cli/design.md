@@ -272,15 +272,16 @@ type Config struct {
 
 ### Custom Start Time Added
 
-**Decision:** Add --start flag to start command
+**Decision:** Add --time flag to start command
 
 **Rationale:**
 - Common use case: forgot to start timer when work began
 - Supports both ISO8601 and HH:MM formats (consistent with add command)
 - More user-friendly than deleting and using add command
 - API accepts any start time in the past
+- Flag name --time is clearer than --start (which was confusing since the command is already "start")
 
-**Pattern:** `solidtime-cli start "Task" --start "09:00"`
+**Pattern:** `solidtime-cli start "Task" --time "09:00"`
 
 ## Open Questions
 

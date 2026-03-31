@@ -54,8 +54,8 @@ solty start "Working on feature X"
 solty start "Bug fix" --project "Customer-Project"
 
 # With custom start time (if you forgot to start)
-solty start "Morning work" --start "09:00"
-solty start "Task" --start "2026-03-31T08:00:00Z"
+solty start "Morning work" --time "09:00"
+solty start "Task" --time "2026-03-31T08:00:00Z"
 ```
 
 ### Stop the timer
@@ -155,7 +155,7 @@ solty list
 
 ```bash
 # Oops, been working since 9am
-solty start "Morning coding" --start "09:00" --project "Customer-Project"
+solty start "Morning coding" --time "09:00" --project "Customer-Project"
 solty stop
 ```
 

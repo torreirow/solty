@@ -43,9 +43,9 @@ The tool will:
 - Required for correcting mistakes
 
 **Start Command Enhancement:**
-- `--start` flag for custom start time (if you forgot to start the timer)
+- `--time` flag for custom start time (if you forgot to start the timer)
 - Supports ISO8601 and HH:MM formats
-- Default: current time
+- Default: current time (when --time is not provided)
 
 ## Non-Goals (v1)
 

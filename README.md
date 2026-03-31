@@ -236,4 +236,6 @@ Built with:
 
 ## License
 
-Internal tool - not for external distribution.
+MIT License - see [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2026 Wouter van der Toorren

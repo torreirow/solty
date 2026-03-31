@@ -32,7 +32,7 @@
             meta = with pkgs.lib; {
               description = "Command-line time tracking tool for Solidtime";
               homepage = "https://github.com/torreirow/solty";
-              license = licenses.unfree;
+              license = licenses.mit;
               maintainers = [ ];
             };
           };

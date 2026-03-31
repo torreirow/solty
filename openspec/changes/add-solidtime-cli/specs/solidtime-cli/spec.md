@@ -233,6 +233,20 @@ The CLI tool SHALL provide built-in help for all commands.
 - **AND** list all available flags with descriptions
 - **AND** provide usage examples
 
+### Requirement: Version Information
+
+The CLI tool SHALL provide version information.
+
+#### Scenario: Display version
+- **WHEN** user runs `solidtime-cli --version` or `solidtime-cli version`
+- **THEN** the CLI SHALL display the version number
+- **AND** exit with code 0
+
+#### Scenario: Version embedded at build time
+- **WHEN** the CLI is built with ldflags
+- **THEN** the version SHALL be embedded from the VERSION file
+- **AND** the version SHALL match the git tag
+
 ### Requirement: Error Messages
 
 The CLI tool SHALL provide clear, actionable error messages.

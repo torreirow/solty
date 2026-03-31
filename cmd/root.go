@@ -8,6 +8,9 @@ import (
 	"github.com/torreirow/solty/internal/config"
 )
 
+// version is set via ldflags during build
+var version = "dev"
+
 var rootCmd = &cobra.Command{
 	Use:   "solty",
 	Short: "Solidtime CLI - Command-line time tracking",
@@ -20,6 +23,7 @@ Track time directly from your terminal with commands like:
   solty list
 
 Configuration is read from ~/.config/solidtime/config.json`,
+	Version: version,
 }
 
 func Execute() error {

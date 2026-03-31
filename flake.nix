@@ -26,7 +26,7 @@
             ldflags = [
               "-s"
               "-w"
-              "-X main.version=${pkgs.lib.strings.trim version}"
+              "-X github.com/torreirow/solty/cmd.version=${pkgs.lib.strings.trim version}"
             ];
 
             meta = with pkgs.lib; {

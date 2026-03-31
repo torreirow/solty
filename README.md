@@ -14,17 +14,60 @@ Command-line interface for Solidtime time tracking.
 
 ## Installation
 
+### Option 1: Nix Flake (Recommended)
+
+```bash
+# Run directly without installing
+nix run github:torreirow/solty -- start "My task"
+
+# Install to user profile
+nix profile install github:torreirow/solty
+
+# Or add to your NixOS/home-manager configuration:
+# flake.nix
+{
+  inputs.solty.url = "github:torreirow/solty";
+  # ...
+  outputs = { self, nixpkgs, solty, ... }: {
+    # NixOS configuration
+    nixosConfigurations.hostname = nixpkgs.lib.nixosSystem {
+      modules = [
+        {
+          environment.systemPackages = [ solty.packages.x86_64-linux.solty ];
+        }
+      ];
+    };
+
+    # Or home-manager configuration
+    homeConfigurations.username = home-manager.lib.homeManagerConfiguration {
+      modules = [
+        {
+          home.packages = [ solty.packages.x86_64-linux.solty ];
+        }
+      ];
+    };
+  };
+}
+```
+
+### Option 2: Go Build
+
 ```bash
 # Clone the repository
 git clone https://github.com/torreirow/solty.git
 cd solty
 
-# Build
-go build -o solty
+# Build with version
+VERSION=$(cat VERSION)
+go build -ldflags "-X github.com/torreirow/solty/cmd.version=${VERSION}" -o solty
 
 # Optional: Install to PATH
 go install
 ```
+
+### Option 3: Pre-built Binaries
+
+Download from [GitHub Releases](https://github.com/torreirow/solty/releases)
 
 ## Configuration
 
@@ -68,6 +111,14 @@ solty stop
 
 ```bash
 solty current
+```
+
+### Check version
+
+```bash
+solty --version
+# or
+solty version
 ```
 
 ### Add completed entry

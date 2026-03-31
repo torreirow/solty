@@ -240,6 +240,50 @@ else
     fi
 fi
 
+# Verify Go build with version
+if [[ -f go.mod ]] && command -v go &> /dev/null; then
+    print_info "Verifying Go build with version ${NEW_VERSION}..."
+
+    # Build with version ldflags
+    if go build -ldflags "-X github.com/torreirow/solty/cmd.version=${NEW_VERSION}" -o solty.test 2>&1; then
+        print_success "Go build succeeded"
+
+        # Test version output
+        VERSION_OUTPUT=$(./solty.test --version 2>&1 || echo "")
+        if echo "$VERSION_OUTPUT" | grep -q "${NEW_VERSION}"; then
+            print_success "Version ${NEW_VERSION} embedded correctly"
+        else
+            print_warning "Version check: output was '${VERSION_OUTPUT}'"
+        fi
+
+        # Clean up test binary
+        rm -f solty.test
+    else
+        print_error "Go build failed!"
+        print_error "Fix build errors before releasing"
+        exit 1
+    fi
+
+    # Check for go.mod/go.sum changes
+    if [[ -n $(git status --porcelain go.mod go.sum 2>/dev/null) ]]; then
+        print_warning "go.mod or go.sum has uncommitted changes"
+        print_info "Run 'go mod tidy' if dependencies changed"
+
+        read -p "Continue anyway? (y/n): " CONTINUE_BUILD
+        if [[ $CONTINUE_BUILD != "y" && $CONTINUE_BUILD != "Y" ]]; then
+            print_error "Aborting release"
+            exit 1
+        fi
+    fi
+else
+    if [[ ! -f go.mod ]]; then
+        print_warning "go.mod not found, skipping Go build checks"
+    else
+        print_warning "Go not installed, skipping build checks"
+    fi
+fi
+echo ""
+
 # Show summary
 echo ""
 echo "════════════════════════════════════════════════════════════"

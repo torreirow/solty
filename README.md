@@ -2,7 +2,7 @@
 
 Command-line interface for Solidtime time tracking.
 
-<img src="./images/solty-logo.png">
+<img src="./images/soltty-logo.png">
 
 ## Features
 

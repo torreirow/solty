@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -44,12 +47,42 @@ func runStart(cmd *cobra.Command, args []string) {
 	current, err := c.GetCurrentTimeEntry()
 	if err != nil {
 		fmt.Println(formatError(err))
-		return
+		os.Exit(2)
 	}
+
+	// If timer is running, ask user if they want to stop it
 	if current != nil {
-		fmt.Printf("Error: A timer is already running: \"%s\"\n", current.Description)
-		fmt.Println("Stop it first with: solty stop")
-		return
+		elapsed := formatElapsedTime(current.Start)
+		fmt.Printf("A timer is currently running: \"%s\" (started %s ago)\n", current.Description, elapsed)
+		fmt.Print("Stop this timer and start a new one? [y/N]: ")
+
+		// Read user input
+		reader := bufio.NewReader(os.Stdin)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println(formatError(fmt.Errorf("failed to read input: %w", err)))
+			os.Exit(2)
+		}
+
+		// Parse input (trim whitespace and convert to lowercase)
+		input = strings.TrimSpace(strings.ToLower(input))
+
+		// Check if user confirmed (accept 'y' or 'yes')
+		if input != "y" && input != "yes" {
+			fmt.Println("Keeping current timer running. No new timer started.")
+			os.Exit(0)
+		}
+
+		// Stop the current timer
+		stoppedEntry, err := c.StopTimeEntry(current.ID)
+		if err != nil {
+			fmt.Println(formatError(fmt.Errorf("failed to stop current timer: %w", err)))
+			os.Exit(2)
+		}
+
+		// Display confirmation of stopped timer
+		duration := formatDuration(stoppedEntry.Duration)
+		fmt.Printf("✓ Stopped: \"%s\" (duration: %s)\n", stoppedEntry.Description, duration)
 	}
 
 	// Resolve project if specified

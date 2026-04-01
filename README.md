@@ -73,19 +73,23 @@ Download from [GitHub Releases](https://github.com/torreirow/soltty/releases)
 
 ## Configuration
 
-Create `~/.config/solidtime/config.json`:
+Create `~/.config/soltty/config.json`:
 
 ```json
 {
   "username": "Your Name",
   "api_token": "your-solidtime-api-token",
-  "workspace_id": "your-workspace-uuid"
+  "workspace_id": "your-workspace-uuid",
+  "base_url": "https://solidtime.tools.technative.cloud/api/v1"
 }
 ```
 
 **Getting your credentials:**
 - **api_token**: Generate in Solidtime → Settings → API Tokens
 - **workspace_id**: Found in Solidtime URL or organization settings
+- **base_url** (required): API endpoint URL
+  - For TechNative Cloud: `https://solidtime.tools.technative.cloud/api/v1`
+  - For self-hosted: use your instance URL
 
 ## Usage
 
@@ -102,6 +106,17 @@ soltty start "Bug fix" --project "Customer-Project"
 soltty start "Morning work" --time "09:00"
 soltty start "Task" --time "2026-03-31T08:00:00Z"
 ```
+
+**Auto-stop feature**: If a timer is already running, `soltty start` will prompt you to stop it first:
+```bash
+$ soltty start "New task"
+A timer is currently running: "Old task" (started 1h 23m ago)
+Stop this timer and start a new one? [y/N]: y
+✓ Stopped: "Old task" (duration: 1h 23m)
+✓ Timer started: "New task"
+```
+
+This eliminates the need to manually run `soltty stop` before starting a new timer.
 
 ### Stop the timer
 
@@ -163,9 +178,19 @@ soltty delete 01234567-89ab-cdef-0123-456789abcdef
 
 soltty searches for `config.json` in this order:
 
-1. `~/.config/solidtime/config.json` (recommended)
-2. `~/.solidtime/config.json`
-3. `./config.json`
+1. `~/.config/soltty/config.json` (recommended)
+2. `~/.config/solidtime/config.json` (legacy - for backward compatibility)
+3. `~/.solidtime/config.json`
+4. `./config.json`
+
+**Migration notes:**
+
+⚠️ **Breaking change**: `base_url` is now a required field. If you have an existing config, you must add:
+```json
+"base_url": "https://solidtime.tools.technative.cloud/api/v1"
+```
+
+Config location: If you have an existing config at `~/.config/solidtime/config.json`, it will continue to work. You can optionally move it to the new location `~/.config/soltty/config.json` to align with the tool name.
 
 ## Time Formats
 

@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-const baseURL = "https://solidtime.tools.technative.cloud/api/v1"
-
 // Client is the Solidtime API client
 type Client struct {
 	baseURL     string
@@ -21,7 +19,7 @@ type Client struct {
 }
 
 // NewClient creates a new Solidtime API client
-func NewClient(token, workspaceID string) *Client {
+func NewClient(baseURL, token, workspaceID string) *Client {
 	return &Client{
 		baseURL:     baseURL,
 		token:       token,

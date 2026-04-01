@@ -61,7 +61,14 @@ func runList(cmd *cobra.Command, args []string) {
 		localStart := entry.Start.Local()
 		date := localStart.Format("2006-01-02")
 		startTime := localStart.Format("15:04")
-		duration := formatDuration(entry.Duration)
+
+		// Check if timer is currently running (no end time)
+		var duration string
+		if entry.End == nil {
+			duration = "running"
+		} else {
+			duration = formatDuration(entry.Duration)
+		}
 
 		if listShowID {
 			fmt.Printf("%-36s | %-10s | %-5s | %-8s | %s\n",

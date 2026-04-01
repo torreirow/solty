@@ -22,7 +22,7 @@ Track time directly from your terminal with commands like:
   soltty current
   soltty list
 
-Configuration is read from ~/.config/solidtime/config.json`,
+Configuration is read from ~/.config/soltty/config.json`,
 	Version: version,
 }
 
@@ -46,7 +46,8 @@ func getClient() (*client.Client, error) {
 		return nil, err
 	}
 
-	return client.NewClient(cfg.APIToken, cfg.WorkspaceID), nil
+	// BaseURL is validated as required field in config.Load()
+	return client.NewClient(cfg.BaseURL, cfg.APIToken, cfg.WorkspaceID), nil
 }
 
 // formatError returns a user-friendly error message

@@ -21,7 +21,7 @@
             version = pkgs.lib.strings.trim version;
             src = ./.;
 
-            vendorHash = "sha256-yGF6iVMU1e+rjwo77Q/2LGX+5pnWuv5AXOQ9rHG1TxQ=";
+            vendorHash = "sha256-eKeUhS2puz6ALb+cQKl7+DGvm9Cl+miZAHX0imf9wdg=";
 
             ldflags = [
               "-s"

@@ -293,11 +293,16 @@ nix build
 
 Releases are automated via GitHub Actions and GoReleaser. To create a new release:
 
-1. **Update version and changelog** (optional - use `release.sh` for this):
+**Prerequisites**: Nix must be installed for automated vendorHash updates when Go dependencies change.
+
+1. **Update version and changelog** (use `release.sh`):
    ```bash
    ./release.sh
    ```
-   This will update VERSION and CHANGELOG.md, create a commit and tag.
+   This will:
+   - Update VERSION and CHANGELOG.md
+   - Automatically update Nix flake vendorHash if Go dependencies changed
+   - Create a commit and tag
 
 2. **Push the tag** to trigger the release:
    ```bash

@@ -6,9 +6,10 @@
 # 1. Checking for uncommitted changes
 # 2. Optionally archiving completed OpenSpec changes
 # 3. Updating VERSION and CHANGELOG.md
-# 4. Verifying the build with the new version (local test)
-# 5. Creating a git commit and tag
-# 6. Optionally pushing to remote
+# 4. Automatically updating Nix flake vendorHash if Go dependencies changed
+# 5. Verifying the build with the new version (local test)
+# 6. Creating a git commit and tag
+# 7. Optionally pushing to remote
 #
 # IMPORTANT: Binary builds are automated via GoReleaser + GitHub Actions
 # -------------------------------------------------------------------
@@ -19,8 +20,19 @@
 #   - Generate checksums
 #   - Create a GitHub Release with all artifacts
 #
-# The local build in this script (step 4) is only for verification.
+# The local build in this script (step 5) is only for verification.
 # The official release binaries are built by GoReleaser in the cloud.
+#
+# Nix vendorHash Automation (step 4):
+# -----------------------------------
+# When Go module dependencies (go.mod/go.sum) change between releases,
+# the Nix flake's vendorHash must be updated. This script automatically:
+#   - Detects dependency changes by comparing with the last release tag
+#   - Calculates the correct hash using `nix build` (parses error output)
+#   - Updates flake.nix with the new hash
+#   - Includes flake.nix in the release commit
+# If Nix is unavailable or hash calculation fails, a warning is shown
+# and the release continues (allowing manual hash update if needed).
 #
 # Workflow:
 #   ./release.sh  →  Creates tag  →  git push origin v*.*.*
@@ -237,6 +249,80 @@ print_info "Updating VERSION..."
 echo "$NEW_VERSION" > VERSION
 print_success "Updated VERSION to ${NEW_VERSION}"
 
+# Automatic vendorHash update for Nix flake (if Go dependencies changed)
+# This section detects if go.mod/go.sum changed since the last release tag,
+# calculates the correct vendorHash using Nix, and updates flake.nix automatically.
+# If Nix is unavailable or calculation fails, a warning is shown but release continues.
+echo ""
+if [[ -f flake.nix ]] && [[ -f go.mod ]]; then
+    print_info "Checking if Go dependencies changed since last release..."
+
+    # Get last release tag
+    LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+    # Check if go.mod or go.sum changed
+    DEPS_CHANGED=false
+    if [[ -z "$LAST_TAG" ]]; then
+        print_info "No previous release tag found (first release)"
+        DEPS_CHANGED=true
+    elif git diff "${LAST_TAG}..HEAD" -- go.mod go.sum | grep -q .; then
+        print_info "Go dependencies changed since ${LAST_TAG}"
+        DEPS_CHANGED=true
+    else
+        print_success "No Go dependency changes detected"
+    fi
+
+    # Update vendorHash if dependencies changed
+    if [[ "$DEPS_CHANGED" == "true" ]]; then
+        if command -v nix &> /dev/null; then
+            print_info "Calculating correct vendorHash..."
+
+            # Create backup of flake.nix
+            cp flake.nix flake.nix.backup
+
+            # Temporarily set vendorHash to empty string to trigger hash calculation
+            sed -i 's|vendorHash = "sha256-[^"]*";|vendorHash = "";|' flake.nix
+
+            # Try to build and capture the correct hash from error output
+            VENDOR_HASH=""
+            BUILD_OUTPUT=$(nix build .#soltty 2>&1 || true)
+
+            # Parse hash from output (Nix shows: "got: sha256-...")
+            VENDOR_HASH=$(echo "$BUILD_OUTPUT" | grep -oP 'got:\s+\Ksha256-[A-Za-z0-9+/=]+' | head -1)
+
+            # Restore backup
+            mv flake.nix.backup flake.nix
+
+            if [[ -n "$VENDOR_HASH" ]] && [[ "$VENDOR_HASH" =~ ^sha256-[A-Za-z0-9+/=]+$ ]]; then
+                print_info "Calculated vendorHash: ${VENDOR_HASH}"
+
+                # Update flake.nix with new hash
+                sed -i "s|vendorHash = \"sha256-[^\"]*\";|vendorHash = \"${VENDOR_HASH}\";|" flake.nix
+
+                # Verify the update worked
+                if grep -q "vendorHash = \"${VENDOR_HASH}\"" flake.nix; then
+                    print_success "Updated vendorHash in flake.nix"
+
+                    # Stage flake.nix for commit
+                    git add flake.nix
+                    print_info "flake.nix will be included in release commit"
+                else
+                    print_error "Failed to update vendorHash in flake.nix"
+                    print_warning "You may need to update it manually after release"
+                fi
+            else
+                print_warning "Could not calculate vendorHash automatically"
+                print_info "Manual update: Run 'nix build .#soltty 2>&1 | grep got:' and update flake.nix"
+            fi
+        else
+            print_warning "Nix not found - skipping automatic vendorHash update"
+            print_info "Install Nix for automated vendorHash updates, or update manually:"
+            print_info "  nix build .#soltty 2>&1 | grep 'got:'"
+        fi
+    fi
+fi
+echo ""
+
 # Verify Nix flake if available
 if [[ -f flake.nix ]] && command -v nix &> /dev/null; then
     print_info "Verifying Nix flake..."
@@ -332,6 +418,9 @@ echo ""
 echo "  Files changed:"
 echo "    - CHANGELOG.md"
 echo "    - VERSION"
+if [[ -n $(git status --porcelain flake.nix 2>/dev/null) ]]; then
+    echo "    - flake.nix (vendorHash updated)"
+fi
 if [[ -n $(git status --porcelain flake.lock 2>/dev/null) ]]; then
     echo "    - flake.lock"
 fi
@@ -345,7 +434,7 @@ echo ""
 # Show git diff
 print_info "Changes to be committed:"
 echo ""
-git diff HEAD CHANGELOG.md VERSION flake.lock 2>/dev/null || git diff CHANGELOG.md VERSION
+git diff HEAD CHANGELOG.md VERSION flake.nix flake.lock 2>/dev/null || git diff CHANGELOG.md VERSION
 if [[ -n $(git status --porcelain openspec/ 2>/dev/null) ]]; then
     echo ""
     print_info "OpenSpec changes:"
@@ -359,6 +448,7 @@ read -p "Commit these changes? (y/n): " CONFIRM_COMMIT
 if [[ $CONFIRM_COMMIT != "y" && $CONFIRM_COMMIT != "Y" ]]; then
     print_warning "Aborting release. Rolling back changes..."
     git checkout CHANGELOG.md VERSION 2>/dev/null || true
+    git checkout flake.nix 2>/dev/null || true
     git checkout flake.lock 2>/dev/null || true
     print_info "Changes rolled back"
     exit 0
@@ -368,14 +458,26 @@ fi
 print_info "Creating git commit..."
 git add CHANGELOG.md VERSION
 
+# Add flake.nix if it was updated (vendorHash)
+if [[ -n $(git status --porcelain flake.nix 2>/dev/null) ]]; then
+    git add flake.nix
+fi
+
 # Add flake.lock if it was updated
 if [[ -n $(git status --porcelain flake.lock 2>/dev/null) ]]; then
     git add flake.lock
 fi
 
+# Build commit message
 COMMIT_MESSAGE="release: bump version to ${NEW_VERSION}
 
 Update VERSION and CHANGELOG.md for ${RELEASE_NAME} release."
+
+# Add note about flake.nix if it was updated
+if [[ -n $(git status --porcelain --cached flake.nix 2>/dev/null) ]]; then
+    COMMIT_MESSAGE="${COMMIT_MESSAGE}
+Update flake.nix vendorHash for Go dependency changes."
+fi
 
 git commit -m "$COMMIT_MESSAGE"
 print_success "Commit created"

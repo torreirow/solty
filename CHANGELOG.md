@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **List clients subcommand**: New `soltty list clients` shows all clients alphabetically with project counts
   - Displays clients sorted by name
-  - Shows project count per client (e.g., "TechNative (14 projects)")
+  - Shows project count per client (e.g., "Acme Corp (14 projects)")
   - Automatically filters out archived clients
 - **List projects subcommand**: New `soltty list projects` shows all projects in table format
   - Table view with Client | Project columns
@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - ⚠️ **BREAKING**: `base_url` is now a required field in config.json
-  - Existing configs must add: `"base_url": "https://solidtime.tools.technative.cloud/api/v1"`
+  - Existing configs must add: `"base_url": "https://app.example.com/api/v1"`
   - Clear error message guides users if field is missing
   - For self-hosted instances, use your instance URL
 

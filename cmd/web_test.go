@@ -13,8 +13,8 @@ func TestDeriveWebURL(t *testing.T) {
 	}{
 		{
 			name:        "Standard API URL",
-			baseURL:     "https://solidtime.tools.technative.cloud/api/v1",
-			expected:    "https://solidtime.tools.technative.cloud",
+			baseURL:     "https://app.example.com/api/v1",
+			expected:    "https://app.example.com",
 			expectError: false,
 		},
 		{

@@ -57,6 +57,6 @@ func deriveWebURL(baseURL string) (string, error) {
 		return "", fmt.Errorf("base URL must include scheme and host (e.g., https://example.com)")
 	}
 
-	// Return just scheme + host (e.g., https://solidtime.tools.technative.cloud)
+	// Return just scheme + host (e.g., https://app.example.com)
 	return fmt.Sprintf("%s://%s", parsed.Scheme, parsed.Host), nil
 }

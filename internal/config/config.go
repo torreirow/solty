@@ -50,7 +50,7 @@ func Load() (*Config, error) {
 				return nil, fmt.Errorf("missing required field: workspace_id in %s", path)
 			}
 			if cfg.BaseURL == "" {
-				return nil, fmt.Errorf("missing required field: base_url in %s\n\nPlease add \"base_url\" to your config.json:\n{\n  ...\n  \"base_url\": \"https://solidtime.tools.technative.cloud/api/v1\"\n}\n\nFor TechNative Cloud, use: https://solidtime.tools.technative.cloud/api/v1\nFor self-hosted, use your instance URL.", path)
+				return nil, fmt.Errorf("missing required field: base_url in %s\n\nPlease add \"base_url\" to your config.json:\n{\n  ...\n  \"base_url\": \"https://app.example.com/api/v1\"\n}\n\nUse your Solidtime instance URL (e.g., https://app.example.com/api/v1)", path)
 			}
 
 			// Validate base_url format
@@ -64,7 +64,7 @@ func Load() (*Config, error) {
 	}
 
 	// If we get here, no config was found
-	return nil, fmt.Errorf("config.json not found in any of these locations:\n  %s\n  %s\n  %s\n  %s\n\nPlease create config.json in %s with:\n{\n  \"username\": \"Your Name\",\n  \"api_token\": \"your-token\",\n  \"workspace_id\": \"your-workspace-id\",\n  \"base_url\": \"https://solidtime.tools.technative.cloud/api/v1\"\n}\n\nNote: base_url is required. Use https://solidtime.tools.technative.cloud/api/v1 for TechNative Cloud.\n\nLast error: %v",
+	return nil, fmt.Errorf("config.json not found in any of these locations:\n  %s\n  %s\n  %s\n  %s\n\nPlease create config.json in %s with:\n{\n  \"username\": \"Your Name\",\n  \"api_token\": \"your-token\",\n  \"workspace_id\": \"your-workspace-id\",\n  \"base_url\": \"https://app.example.com/api/v1\"\n}\n\nNote: base_url is required. Use your Solidtime instance URL.\n\nLast error: %v",
 		searchPaths[0], searchPaths[1], searchPaths[2], searchPaths[3],
 		filepath.Join(configDir, "soltty"),
 		lastErr)

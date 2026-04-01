@@ -13,6 +13,7 @@ Command-line interface for Solidtime time tracking.
 - **List clients** - View all clients with project counts
 - **List projects** - View all projects with client information
 - **Delete entries** - Remove mistakes
+- **Web interface** - Open Solidtime in your browser with one command
 - **Project support** - Assign time to projects
 - **Custom start times** - Backdate timers if you forgot to start
 
@@ -196,6 +197,21 @@ soltty list --id
 # Delete by ID
 soltty delete 01234567-89ab-cdef-0123-456789abcdef
 ```
+
+### Open web interface
+
+```bash
+# Open Solidtime web interface in your browser
+soltty web
+```
+
+The web URL is automatically derived from your configured API endpoint. For example, if your `base_url` is `https://solidtime.tools.technative.cloud/api/v1`, the web command will open `https://solidtime.tools.technative.cloud` in your default browser.
+
+**Notes:**
+- Works cross-platform (Linux, macOS, Windows)
+- Uses your system's default browser
+- If browser opening fails, the URL is displayed so you can manually copy it
+- Requires existing browser session for authentication (no automatic login yet)
 
 ## Configuration Locations
 

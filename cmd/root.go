@@ -23,6 +23,7 @@ Track time directly from your terminal with commands like:
   soltty list
   soltty list clients
   soltty list projects
+  soltty web
 
 Configuration is read from ~/.config/soltty/config.json`,
 	Version: version,
@@ -39,6 +40,7 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(webCmd)
 }
 
 // getClient creates an API client from config

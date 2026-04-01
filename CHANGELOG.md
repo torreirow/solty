@@ -5,6 +5,26 @@ All notable changes to Soltty will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## NEXT VERSION
+
+### Added
+- **List clients subcommand**: New `soltty list clients` shows all clients alphabetically with project counts
+  - Displays clients sorted by name
+  - Shows project count per client (e.g., "TechNative (14 projects)")
+  - Automatically filters out archived clients
+- **List projects subcommand**: New `soltty list projects` shows all projects in table format
+  - Table view with Client | Project columns
+  - Shows projects sorted by client name, then project name
+  - Automatically filters out archived projects
+  - Optional `-c` flag to filter by client name (partial match, case-insensitive)
+  - Projects without a client show as "(no client)"
+  - Maintains backwards compatibility: `soltty list` still shows time entries
+- **Web command**: New `soltty web` opens the Solidtime web interface in your default browser
+  - Automatically derives web URL from configured API endpoint
+  - Cross-platform support (Linux, macOS, Windows)
+  - Shows URL if browser opening fails for manual copy-paste
+  - Seamless transition between CLI and web interface
+
 ## 0.2.0 - 01 Apr 2026
 
 ### Added

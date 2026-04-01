@@ -8,13 +8,43 @@ import (
 
 // Project represents a Solidtime project
 type Project struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	ClientID   *string `json:"client_id"`
+	IsArchived bool    `json:"is_archived"`
+}
+
+// SolidtimeClient represents a Solidtime client (customer/organization)
+type SolidtimeClient struct {
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	IsArchived bool   `json:"is_archived"`
 }
 
 // ProjectsResponse wraps the API response
 type ProjectsResponse struct {
 	Data []Project `json:"data"`
+}
+
+// ClientsResponse wraps the API response for clients
+type ClientsResponse struct {
+	Data []SolidtimeClient `json:"data"`
+}
+
+// GetClients fetches all clients in the workspace
+func (c *Client) GetClients() ([]SolidtimeClient, error) {
+	endpoint := fmt.Sprintf("organizations/%s/clients", c.workspaceID)
+	respBody, err := c.doRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var response ClientsResponse
+	if err := json.Unmarshal(respBody, &response); err != nil {
+		return nil, fmt.Errorf("failed to parse clients response: %w", err)
+	}
+
+	return response.Data, nil
 }
 
 // GetProjects fetches all projects in the workspace

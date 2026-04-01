@@ -10,6 +10,8 @@ Command-line interface for Solidtime time tracking.
 - **Add entries** - Create completed time entries with specific times
 - **Current timer** - See what's running
 - **List entries** - View recent time entries
+- **List clients** - View all clients with project counts
+- **List projects** - View all projects with client information
 - **Delete entries** - Remove mistakes
 - **Project support** - Assign time to projects
 - **Custom start times** - Backdate timers if you forgot to start
@@ -164,6 +166,27 @@ soltty list --limit 5
 soltty list --id
 ```
 
+### List clients
+
+```bash
+# Show all clients with project counts
+soltty list clients
+```
+
+### List projects
+
+```bash
+# Show all projects with client names
+soltty list projects
+
+# Filter projects by client (partial match, case-insensitive)
+soltty list projects -c TechNative
+soltty list projects -c tech
+soltty list projects --client "Customer Name"
+```
+
+**Note**: Archived clients and projects are automatically hidden from listings.
+
 ### Delete entry
 
 ```bash
@@ -205,6 +228,15 @@ Use project names (not IDs) with the `--project` flag. soltty will:
 - Look up the project ID automatically
 - Match names case-insensitively
 - Suggest available projects if not found
+
+**Finding available projects:**
+```bash
+# List all projects to see available names
+soltty list projects
+
+# Filter by client to find specific projects
+soltty list projects -c "Client Name"
+```
 
 ## Exit Codes
 

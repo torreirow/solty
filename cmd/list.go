@@ -14,19 +14,32 @@ var (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List recent time entries",
-	Long: `Display recent time entries in a table format.
+	Short: "List time entries, clients, or projects",
+	Long: `Display time entries, clients, or projects.
+
+Subcommands:
+  soltty list              # List recent time entries (default)
+  soltty list clients      # List all clients with project counts
+  soltty list projects     # List all projects with client names
+  soltty list projects -c <client>  # Filter projects by client
 
 Examples:
-  solty list
-  solty list --limit 5
-  solty list --id           # Show entry IDs for deletion`,
+  soltty list
+  soltty list --limit 5
+  soltty list --id           # Show entry IDs for deletion
+  soltty list clients
+  soltty list projects
+  soltty list projects -c TechNative`,
 	Run: runList,
 }
 
 func init() {
 	listCmd.Flags().IntVarP(&listLimit, "limit", "l", 10, "Number of entries to show")
 	listCmd.Flags().BoolVar(&listShowID, "id", false, "Show entry IDs")
+
+	// Register subcommands
+	listCmd.AddCommand(listClientsCmd)
+	listCmd.AddCommand(listProjectsCmd)
 }
 
 func runList(cmd *cobra.Command, args []string) {

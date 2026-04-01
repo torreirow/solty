@@ -23,7 +23,7 @@
 
             # vendorHash is automatically updated by release.sh when Go dependencies change.
             # To manually update: Run `nix build .#soltty 2>&1 | grep "got:"` and use the hash shown.
-            vendorHash = "sha256-eKeUhS2puz6ALb+cQKl7+DGvm9Cl+miZAHX0imf9wdg=";
+            vendorHash = "sha256-Wr+GuQ7AbD0RmHppiLU+6GxRl8FRqp7yht8mnZak/2A=";
 
             ldflags = [
               "-s"

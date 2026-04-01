@@ -5,7 +5,7 @@ All notable changes to Soltty will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## NEXT VERSION
 
 ### Added
 - **Auto-stop on start**: When starting a new timer while one is already running, soltty now prompts to stop the current timer automatically. Eliminates manual `soltty stop` step.

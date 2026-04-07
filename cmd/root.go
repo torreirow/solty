@@ -24,6 +24,7 @@ Track time directly from your terminal with commands like:
   soltty list clients
   soltty list projects
   soltty web
+  soltty info
 
 Configuration is read from ~/.config/soltty/config.json`,
 	Version: version,

@@ -5,6 +5,35 @@ All notable changes to Soltty will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## NEXT VERSION
+
+### Added
+- **Continue command**: New `soltty continue <entry-id>` starts a timer using an existing entry as template
+  - Copies description and project from any previous entry
+  - Accepts short IDs (6-36 characters) or full UUID
+  - Displays 8-character short IDs in list output for easy reference
+  - Same auto-stop behavior as start command if timer is running
+  - Helpful error messages for: not found, ambiguous matches, invalid format
+- **Enhanced list output**: List command now shows entry IDs and project names by default
+  - New ID column shows first 8 characters of UUID (e.g., "985d7cb2")
+  - New Project column between Duration and Description
+  - Full UUID display maintained with `--id` flag
+  - Project names fetched once and mapped for efficient display
+  - Shows "No project" for entries without assigned projects
+- **Short ID matching**: Flexible ID prefix matching system
+  - Accept 6-36 character prefixes (minimum 6 for safety)
+  - Case-insensitive matching
+  - Searches last 1000 entries for performance
+  - Clear error messages with suggested actions for ambiguous or missing IDs
+  - Statistical analysis shows 8-char IDs are safe (< 0.01% collision under 9,300 entries)
+
+### Changed
+- **List output format**: Default list output now includes ID and Project columns (wider output)
+  - Previous format: Date | Start | Duration | Description
+  - New format: ID | Date | Start | Duration | Project | Description
+  - Output width increased from ~60 to ~90 characters
+  - `--id` flag still available for full UUID display
+
 ## 0.3.0 - 01 Apr 2026
 
 ### Added

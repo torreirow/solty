@@ -20,6 +20,7 @@ Track time directly from your terminal with commands like:
   soltty start "Working on feature"
   soltty stop
   soltty current
+  soltty continue <entry-id>
   soltty list
   soltty list clients
   soltty list projects
@@ -41,6 +42,7 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(continueCmd)
 	rootCmd.AddCommand(webCmd)
 }
 

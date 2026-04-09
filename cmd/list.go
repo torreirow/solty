@@ -60,13 +60,24 @@ func runList(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	// Fetch projects for name lookup
+	projects, err := c.GetProjects()
+	if err != nil {
+		fmt.Println(formatError(err))
+		return
+	}
+	projectMap := make(map[string]string)
+	for _, p := range projects {
+		projectMap[p.ID] = p.Name
+	}
+
 	// Print header
 	if listShowID {
-		fmt.Println("ID                                   | Date       | Start | Duration | Description")
-		fmt.Println(strings.Repeat("-", 100))
+		fmt.Println("ID                                   | Date       | Start | Duration | Project        | Description")
+		fmt.Println(strings.Repeat("-", 120))
 	} else {
-		fmt.Println("Date       | Start | Duration | Description")
-		fmt.Println(strings.Repeat("-", 60))
+		fmt.Println("ID       | Date       | Start | Duration | Project        | Description")
+		fmt.Println(strings.Repeat("-", 90))
 	}
 
 	// Print entries
@@ -83,12 +94,20 @@ func runList(cmd *cobra.Command, args []string) {
 			duration = formatDuration(entry.Duration)
 		}
 
+		// Get project name
+		projectName := "No project"
+		if entry.ProjectID != nil {
+			if name, ok := projectMap[*entry.ProjectID]; ok {
+				projectName = name
+			}
+		}
+
 		if listShowID {
-			fmt.Printf("%-36s | %-10s | %-5s | %-8s | %s\n",
-				entry.ID, date, startTime, duration, entry.Description)
+			fmt.Printf("%-36s | %-10s | %-5s | %-8s | %-14s | %s\n",
+				entry.ID, date, startTime, duration, projectName, entry.Description)
 		} else {
-			fmt.Printf("%-10s | %-5s | %-8s | %s\n",
-				date, startTime, duration, entry.Description)
+			fmt.Printf("%-8s | %-10s | %-5s | %-8s | %-14s | %s\n",
+				entry.ID[:8], date, startTime, duration, projectName, entry.Description)
 		}
 	}
 }

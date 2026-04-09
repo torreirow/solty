@@ -8,15 +8,17 @@ Command-line interface for Solidtime time tracking.
 
 - **Start/Stop timers** - Quick time tracking from the terminal
 - **Auto-stop on start** - Automatically prompts to stop running timer when starting a new one
+- **Continue timer** - Restart a timer using an existing entry as template (copies description and project)
 - **Add entries** - Create completed time entries with specific times
 - **Current timer** - See what's running
-- **List entries** - View recent time entries
+- **List entries** - View recent time entries with short IDs and project names
 - **List clients** - View all clients with project counts
 - **List projects** - View all projects with client information
 - **Delete entries** - Remove mistakes
 - **Web interface** - Open Solidtime in your browser with one command
 - **Project support** - Assign time to projects
 - **Custom start times** - Backdate timers if you forgot to start
+- **Short ID matching** - Reference entries by 8-character short IDs (6-36 chars accepted)
 
 ## Installation
 
@@ -142,6 +144,28 @@ This eliminates the need to manually run `soltty stop` before starting a new tim
 soltty stop
 ```
 
+### Continue a timer
+
+```bash
+# Continue a previous task (copies description and project)
+soltty continue 985d7cb2
+
+# Also accepts longer IDs or full UUID
+soltty continue 985d7cb2-cb20
+soltty continue 985d7cb2-cb20-40a4-ad9a-627ffa5cdc77
+```
+
+**How it works:**
+- Use `soltty list` to see 8-character short IDs for your recent entries
+- Enter at least 6 characters of an entry ID
+- The tool will copy the description and project to a new timer
+- If a timer is already running, you'll be prompted to stop it first
+
+**Error handling:**
+- If ID not found, you'll get suggestions to use `soltty list --id`
+- If ID is ambiguous (matches multiple entries), you'll see all matches with details
+- Invalid format shows helpful examples
+
 ### Show current timer
 
 ```bash
@@ -172,15 +196,28 @@ soltty add "Client call" --start "2026-03-31T14:00:00Z" --end "2026-03-31T15:30:
 ### List recent entries
 
 ```bash
-# Show last 10 entries
+# Show last 10 entries (with 8-char short IDs and project names)
 soltty list
 
 # Show last 5 entries
 soltty list --limit 5
 
-# Show with IDs (for deletion)
+# Show with full UUIDs (36 characters)
 soltty list --id
 ```
+
+**Output format:**
+```
+ID       | Date       | Start | Duration | Project        | Description
+------------------------------------------------------------------------------------------
+985d7cb2 | 2026-04-09 | 14:30 | 2h 15m   | Customer       | Working on feature X
+a1b2c3d4 | 2026-04-09 | 10:00 | 1h 30m   | No project     | Bug fix
+```
+
+**Note:**
+- The default output shows 8-character short IDs for easy reference
+- Use `--id` flag to see full 36-character UUIDs (useful for deletion or ambiguous IDs)
+- Short IDs are safe for typical usage (collision probability < 0.01% under 9,300 entries)
 
 ### List clients
 
@@ -293,6 +330,9 @@ soltty stop
 
 # Check what you tracked today
 soltty list
+
+# Continue working on a previous task
+soltty continue 985d7cb2
 ```
 
 **Forgot to start timer:**
